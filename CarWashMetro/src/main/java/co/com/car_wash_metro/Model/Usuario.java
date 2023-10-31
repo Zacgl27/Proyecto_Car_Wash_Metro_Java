@@ -8,6 +8,7 @@ public class Usuario {
     protected String correo;
     protected String contraseña;
     protected int telefono;
+    private int opc;
 
     public Usuario(){
 
@@ -23,7 +24,7 @@ public class Usuario {
     }
 
     public int getCedula() {
-        return cedula;
+        return this.cedula;
     }
 
     public void setCedula(int cedula) {
@@ -69,4 +70,12 @@ public class Usuario {
     public void setTelefono(int telefono) {
         this.telefono = telefono;
     }
+
+
+    public void setOpc(int opc){ this.opc = opc;} {
+    }
+
+    public int getOpc() {  return opc;}
+
 }
+

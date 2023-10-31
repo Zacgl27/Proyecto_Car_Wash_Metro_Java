@@ -3,6 +3,9 @@ package co.com.car_wash_metro.Model;
 public class Cliente extends Usuario{
 
     protected int id_cliente;
+
+
+
     protected String matricula;
 
     public Cliente(){
