@@ -1,12 +1,10 @@
-package co.com.car_wash_metro.ModelDAO;
+package co.com.car_wash_metro.modelDAO;
 
-import co.com.car_wash_metro.Conexion.Conexion;
-import co.com.car_wash_metro.Model.Cliente;
-import co.com.car_wash_metro.Model.Reserva;
-import co.com.car_wash_metro.Model.Usuario;
+import co.com.car_wash_metro.conexion.Conexion;
+import co.com.car_wash_metro.model.Reserva;
+import co.com.car_wash_metro.model.Usuario;
 
-import java.security.cert.Extension;
-import javax.imageio.plugins.jpeg.JPEGImageReadParam;
+import javax.print.attribute.URISyntax;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +16,7 @@ public class ModelDAO {
             //PreparedStatement no sirve para preparar el qury de sql
             PreparedStatement ps = null;
             try {
-                String query = "INSERT INTO `usuario` (`CEDULA`, `NOMBRE`, `APELLIDO`, `CORREO`, `CONTRASEÑA`, `TELEFONO`) VALUES (?,?,?,?,?,?)";
+                String query = "INSERT INTO `usuario` (`CEDULA`, `NOMBRE`, `APELLIDO`, `CORREO`, `CONTRASEÑA`, `TELEFONO` , `ROL` ) VALUES (?,?,?,?,?,?,?)";
                 ps = conexion.prepareStatement(query);
                 ps.setInt(1, registro.getCedula());
                 ps.setString(2, registro.getNombre());
@@ -26,6 +24,7 @@ public class ModelDAO {
                 ps.setString(4, registro.getCorreo());
                 ps.setString(5, registro.getContraseña());
                 ps.setInt(6, registro.getTelefono());
+                ps.setString(7,registro.getRol());
                 // SE UTILIZA CUANDO ESMOS UTILIZANDO PARa insert  DELETE UPDATE, execitequery, para
                 ps.executeUpdate();
                 System.out.println("registro de usario exitoso");
@@ -108,7 +107,7 @@ public class ModelDAO {
         }
     }
 
-    public static void realizarReservaDB(Reserva  reserva, Cliente cliente){
+    public static void realizarReservaDB(Reserva  reserva, Usuario cliente){
         try(Connection conexion = Conexion.get_connection()){
             PreparedStatement ps = null;
             try{
@@ -118,7 +117,7 @@ public class ModelDAO {
                 ps.setTime(2,reserva.getHora());
                 ps.setInt(4, reserva.getId_cliente());
                 ps.setInt(5, reserva.getId_celda());
-                ps.setString(6, cliente.getMatricula());
+                ps.setString(6, reserva.getMatricula());
                 ps.executeUpdate();
                 System.out.println("Registro de reserva exitoso!");
             }catch(SQLException e){
@@ -151,38 +150,38 @@ public class ModelDAO {
         }
     }
 
-    public static void modificarReserva(Reserva update, Cliente cliente) {
+    public static void modificarReserva(Reserva reserva, Usuario cliente) {
         try (Connection connect = Conexion.get_connection()) {
             PreparedStatement ps = null;
             try {
-                int opc = update.getOpc();
+                int opc = reserva.getOpc();
                 System.out.println(opc);
                 if (opc == 1) {
                     String query = "UPDATE reserva SET fecha =?  WHERE Id_reserva =? ";
                     ps = connect.prepareStatement(query);
-                    ps.setDate(1, update.getFecha());
-                    ps.setInt(2, update.getId_reserva());
+                    ps.setDate(1, reserva.getFecha());
+                    ps.setInt(2, reserva.getId_reserva());
                     ps.executeUpdate();
                     System.out.println("Actualizacion exitosa");
                 } else if (opc == 2) {
                     String query = "UPDATE  reservs SET hora =?  WHERE Id_reserva  =? ";
                     ps = connect.prepareStatement(query);
-                    ps.setTime(1, update.getHora());
-                    ps.setInt(2, update.getId_reserva());
+                    ps.setTime(1, reserva.getHora());
+                    ps.setInt(2, reserva.getId_reserva());
                     ps.executeUpdate();
                     System.out.println("Actualizacion exitosa");
                 } else if (opc == 3) {
                     String query = "UPDATE  reserva SET celda =?  WHERE id_reserva   =? ";
                     ps = connect.prepareStatement(query);
-                    ps.setInt(1, update.getId_celda());
-                    ps.setInt(2, update.getId_reserva());
+                    ps.setInt(1, reserva.getId_celda());
+                    ps.setInt(2, reserva.getId_reserva());
                     ps.executeUpdate();
                     System.out.println("Actualizacion exitosa");
                 } else if (opc == 4) {
                     String query = "UPDATE  reserva SET matricula =?  WHERE id_reserva   =? ";
                     ps = connect.prepareStatement(query);
-                    ps.setString(1, cliente.getMatricula());
-                    ps.setInt(2, update.getId_reserva());
+                    ps.setString(1, reserva.getMatricula());
+                    ps.setInt(2, reserva.getId_reserva());
                     ps.executeUpdate();
                     System.out.println("Actualizacion exitosa");
                 }
@@ -211,7 +210,31 @@ public class ModelDAO {
         } catch (SQLException e) {
             System.out.println(e);
         }
+
     }
+    public static Usuario iniciarSesion(String correo){
+        PreparedStatement ps = null;   // va a mandar la cosulta
+        ResultSet rs = null; //  va a traer la consulta
+        Usuario user = new Usuario();
+
+        try (Connection connect = Conexion.get_connection()){
+            String query ="SELECT CORREO, CONTRASEÑA, ROL FROM `usuario` WHERE CORREO = ?";
+            ps = connect.prepareStatement(query);
+            ps.setString(1, correo);
+            rs = ps.executeQuery();  //// delete , select de sql
+
+            while (rs.next()){
+                user.setCorreo(rs.getString("CORREO"));
+                user.setContraseña(rs.getString("CONTRASEÑA"));
+                user.setRol(rs.getString("ROL"));
+            }
+        }catch (SQLException e){
+            System.out.println("No se recuperaron registros");
+            System.out.println(e);
+        }
+        return user;
+    }
+
 
 }
 

@@ -1,39 +1,30 @@
-package co.com.car_wash_metro.ModelService;
+package co.com.car_wash_metro.modelService;
 
-import co.com.car_wash_metro.Model.Cliente;
-import co.com.car_wash_metro.Model.Reserva;
-import co.com.car_wash_metro.Model.Usuario;
-import co.com.car_wash_metro.Conexion.Conexion;
-import co.com.car_wash_metro.ModelDAO.ModelDAO;
+import co.com.car_wash_metro.model.Reserva;
+import co.com.car_wash_metro.model.Usuario;
+import co.com.car_wash_metro.modelDAO.ModelDAO;
 
 
-import java.security.cert.Extension;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Scanner;
 
 public class ModelService {
 
     static Scanner sc = new Scanner(System.in);
 
-
     //funciones
-    public static void crearUsuario() {
+    public static void crearUsuario(String rol) {
         System.out.println("Ingrese su cedula ");
         int cedula = sc.nextInt();
         System.out.println("Ingrese su nombre");
-        String nombre = sc.nextLine();
+        String nombre = sc.next();
         System.out.println("IngrEse su apellido");
-        String apellido = sc.nextLine();
+        String apellido = sc.next();
         System.out.println("Ingrese su correo");
-        String correo = sc.nextLine();
+        String correo = sc.next();
         System.out.println("Ingrese su telefono");
         int telefono = sc.nextInt();
         System.out.println("Ingrese su contraseña");
         String contraseña = sc.next();
-
 
         Usuario registro = new Usuario();
 
@@ -44,23 +35,19 @@ public class ModelService {
         registro.setCorreo(correo);
         registro.setTelefono(telefono);
         registro.setContraseña(contraseña);
-
+        registro.setRol(rol);
 
         ModelDAO.crearUsuario(registro);
     }
 
-
-    public static void eliminarUsuario(int Cedula) {
-
-
+    public static void eliminarUsuario() {
         System.out.println("Indiquela cedula del usuaro  a eliminar ");
 
         int cedula = sc.nextInt();
 
-        ModelDAO.eliminarUsuario(Cedula);
+        ModelDAO.eliminarUsuario(cedula);
 
     }
-
 
     public static void modificarUsuario() {
         System.out.println("Indique  para modificar 1. cedula 2.  nombre  3.apellido   4.correo  5.telefono");
@@ -145,7 +132,6 @@ public class ModelService {
     }
 
     public static void realizarReserva() {
-
         System.out.println("Fecha de la reserva: ");
         String fecha = sc.next();
         System.out.println("Hora de la reserva: ");
@@ -158,13 +144,15 @@ public class ModelService {
         String matricula = sc.next();
 
         Reserva reserva = new Reserva();
-        Cliente cliente= new Cliente();
+        Usuario cliente= new Usuario();
+
+        cliente.setCedula(cedula);
 
         //reserva.setFecha(fecha);
         //reserva.setHora(hora);
         reserva.setEstado(estado);
         reserva.setId_cliente(cedula);
-        cliente.setMatricula(matricula);
+        reserva.setMatricula(matricula);
 
 
         ModelDAO.realizarReservaDB(reserva, cliente);
@@ -172,13 +160,36 @@ public class ModelService {
 
     }
 
-    public static void eliminarReserva( int id_reserva) {  
-
-        //System.out.println("bgrese el id de la reserva para eliminar ");
-        //int id_reserva = sc.nextInt();
+    public static void eliminarReserva() {
+        System.out.println("bgrese el id de la reserva para eliminar ");
+        int id_reserva = sc.nextInt();
 
         ModelDAO.eliminarReserva(id_reserva);
+    }
+    public static String iniciarSesion(){
+        String rol = "";
 
+        System.out.println("Ingrese su correo");
+        String correo = sc.next();
 
+        System.out.println("Ingrese su contraseña");
+        String contraseña = sc.next();
+
+       Usuario usuario = ModelDAO.iniciarSesion(correo);
+
+       if (usuario.getCorreo() == null){
+           System.out.println("El usuario no existe");
+       }else {
+           if (usuario.getContraseña().equals(contraseña)){
+               rol = usuario.getRol();
+           }else{
+               System.out.println("Contraseña  no es correcta");
+           }
+       }
+
+       return rol;
+    }
+    public  static  void listarReserva(){
+        ModelDAO.listarReservaDB();
     }
 }

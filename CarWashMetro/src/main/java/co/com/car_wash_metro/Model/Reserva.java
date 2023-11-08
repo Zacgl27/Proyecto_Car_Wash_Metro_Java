@@ -1,4 +1,4 @@
-package co.com.car_wash_metro.Model;
+package co.com.car_wash_metro.model;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -10,6 +10,8 @@ public class Reserva {
     protected String estado;
     protected int id_cliente;
     protected int id_celda;
+
+    protected String matricula;
     public Reserva() {
 
     }
@@ -21,6 +23,7 @@ public class Reserva {
         this.estado = estado;
         this.id_cliente = id_cliente;
         this.id_celda = id_celda;
+        this.matricula = matricula;
     }
 
     public int getId_reserva() {
@@ -59,6 +62,16 @@ public class Reserva {
     public void setId_celda(int id_celda) {
         this.id_celda = id_celda;
     }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
+
     public int getOpc() {
         return 0;
     }

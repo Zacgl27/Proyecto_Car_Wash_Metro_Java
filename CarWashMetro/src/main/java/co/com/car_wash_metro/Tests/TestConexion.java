@@ -1,6 +1,6 @@
-package co.com.car_wash_metro.Tests;
+package co.com.car_wash_metro.tests;
 
-import co.com.car_wash_metro.Conexion.Conexion;
+import co.com.car_wash_metro.conexion.Conexion;
 
 import java.sql.Connection;
 import java.sql.SQLException;

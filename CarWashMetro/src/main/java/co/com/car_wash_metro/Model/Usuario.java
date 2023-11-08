@@ -1,4 +1,4 @@
-package co.com.car_wash_metro.Model;
+package co.com.car_wash_metro.model;
 
 public class Usuario {
 
@@ -9,6 +9,7 @@ public class Usuario {
     protected String contraseña;
     protected int telefono;
     private int opc;
+     private  String Rol ;
 
     public Usuario(){
 
@@ -71,6 +72,9 @@ public class Usuario {
         this.telefono = telefono;
     }
 
+    public String getRol() { return Rol;     }
+
+    public void setRol(String rol) {Rol = rol;}
 
     public void setOpc(int opc){ this.opc = opc;} {
     }

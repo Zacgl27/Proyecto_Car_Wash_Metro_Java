@@ -1,4 +1,4 @@
-package co.com.car_wash_metro.Model;
+package co.com.car_wash_metro.model;
 
 public class Celda {
 

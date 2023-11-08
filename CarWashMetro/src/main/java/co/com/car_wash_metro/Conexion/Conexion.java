@@ -1,4 +1,4 @@
-package co.com.car_wash_metro.Conexion;
+package co.com.car_wash_metro.conexion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
